@@ -1,0 +1,30 @@
+html,body {
+    background-color: #168F55;
+}
+
+#background-main {
+    background-image: url(../img/images.jpeg);
+    height: 400px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#background-main h4 {
+    color: white;
+    position: absolute;
+    text-align: center;
+    margin-top: 180px;
+    left: 25%;
+    right: 25%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.formLogin {
+    position: absolute;
+    text-align: center;
+    left: 25%;
+    right: 25%;
+    margin-top: 100px;
+}
