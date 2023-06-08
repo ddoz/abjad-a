@@ -6,6 +6,9 @@ class Login extends CI_Controller {
 	public function __construct() {
 		parent::__construct(); 	
 		$this->load->library('form_validation');
+		if($this->session->userdata('username')!=null) {
+			redirect(base_url()."dashboard");
+		}
 	 }
 
 	public function index()
@@ -41,10 +44,12 @@ class Login extends CI_Controller {
 					);
 					redirect(base_url()."dashboard");
 				}else {
-
+					$this->session->set_flashdata('message','Login Gagal. Username atau Password Salah');
+					redirect(base_url()."login");
 				}
 		   }else {
-			 
+			$this->session->set_flashdata('message','Login Gagal. Username atau Password Salah');
+			redirect(base_url()."login");
 		   }
         }
 	}
