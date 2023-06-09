@@ -55,19 +55,45 @@ class Siswa extends CI_Controller {
           if ($siswa) {
             $this->session->set_flashdata('message','NISN Sudah Ada.');
           } else {
-            // Data kelas valid, simpan ke database
-            // Data siswa
-            $data_siswa = array(
-                'nisn' => $nisn,
-                'nama_siswa' => $nama_siswa,
-                'kelas_id' => $kelas,
-                'tanggal_lahir' => $tanggal_lahir
-            );
-            if ($this->Siswa_model->simpanSiswa($data_siswa)) {
-                $this->session->set_flashdata('message','Siswa Berhasil disimpan.');
-            } else {
-                $this->session->set_flashdata('message','Siswa Gagal disimpan.');
+            $config['upload_path']          = './uploads/';
+            $config['allowed_types']        = 'jpg|png';
+            $config['max_size']             = 500;
+            $config['max_width']            = 1024;
+            $config['max_height']           = 768;
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('foto'))
+            {
+                $this->session->set_flashdata('message','Siswa Gagal disimpan. Periksa Kembali ukuran dan tipe gambar.');
+            }else {
+                // Data siswa
+                $image_data = $this->upload->data();
+                $imgdata = file_get_contents($image_data['full_path']);
+                $file_encode=base64_encode($imgdata);
+
+                $data_siswa = array(
+                    'nisn' => $nisn,
+                    'nama_siswa' => $nama_siswa,
+                    'kelas_id' => $kelas,
+                    'tanggal_lahir' => $tanggal_lahir,
+                    "foto"=>$file_encode,
+                    "tipe_berkas"=>$this->upload->data('file_type')
+                );
+
+                
+                if ($this->Siswa_model->simpanSiswa($data_siswa)) {
+                    $this->db->insert("users", array(
+                        "username" => $nisn,
+                        "nama" => $nama_siswa,
+                        "level" => "siswa",
+                        "user_related" => $this->db->insert_id(),
+                        "password" => password_hash($tanggal_lahir, PASSWORD_BCRYPT)
+                    ));
+                    $this->session->set_flashdata('message','Siswa Berhasil disimpan.');
+                } else {
+                    $this->session->set_flashdata('message','Siswa Gagal disimpan.');
+                }
             }
+            
           }
           redirect(base_url('admin/siswa'));
         }
@@ -102,11 +128,29 @@ class Siswa extends CI_Controller {
             } else {
                 // Data siswa
                 $data_siswa = array(
-                    'nisn' => $nisn,
                     'nama_siswa' => $nama_siswa,
                     'kelas_id' => $kelas,
                     'tanggal_lahir' => $tanggal_lahir
                 );
+
+                $config['upload_path']          = './uploads/';
+                $config['allowed_types']        = 'jpg|png';
+                $config['max_size']             = 500;
+                $config['max_width']            = 1024;
+                $config['max_height']           = 768;
+                $this->load->library('upload', $config);
+
+                if(is_uploaded_file($_FILES['foto']['tmp_name'])) {
+                    if ($this->upload->do_upload('foto')){
+                        $image_data = $this->upload->data();
+                        $imgdata = file_get_contents($image_data['full_path']);
+                        $file_encode=base64_encode($imgdata);
+                        $data_siswa['foto'] = $file_encode;
+                        $data_siswa['tipe_berkas'] = $this->upload->data('file_type');
+                    }
+                }
+
+                
                 if ($this->Siswa_model->updateSiswa($id, $data_siswa)) {
                     $this->session->set_flashdata('message','Siswa Berhasil diubah.');
                 } else {
@@ -125,6 +169,8 @@ class Siswa extends CI_Controller {
             $this->session->set_flashdata('message','Siswa Gagal dihapus. Karena terdapat siswa yang terhubung ke monitoring atau konsultasi.');
         } else {
             if ($this->Siswa_model->hapusSiswa($id)) {
+                $this->db->where("user_related",$id);
+                $this->db->delete("users");
                 $this->session->set_flashdata('message','Siswa Berhasil dihapus.');
             } else {
                 $this->session->set_flashdata('message','Siswa Gagal dihapus.');

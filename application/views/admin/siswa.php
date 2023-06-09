@@ -27,6 +27,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Foto</th>
                                     <th>NISN</th>
                                     <th>Nama Siswa</th>
                                     <th>Kelas</th>
@@ -38,6 +39,7 @@
                                 <?php foreach($siswa as $i => $k){ ?>
                                 <tr>
                                     <td><?=$i+1?></td>
+                                    <td><img src="data:<?php echo $k->tipe_berkas; ?>;base64,<?php echo $k->foto; ?>"></td>
                                     <td><?=$k->nisn?></td>
                                     <td><?=$k->nama_siswa?></td>
                                     <td><?=$k->nama_kelas?></td>
@@ -76,7 +78,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <form action="<?=base_url('admin/siswa/store')?>" method="POST">
+          <form action="<?=base_url('admin/siswa/store')?>" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="nisn">Foto</label>
+              <input type="file" class="form-control" name="foto" required>
+            </div>
             <div class="form-group">
               <label for="nisn">NISN</label>
               <input type="number" class="form-control" name="nisn" required>
@@ -121,10 +127,14 @@
         </div>
         <div class="modal-body">
           <form action="<?=base_url('admin/siswa/update')?>" method="POST">
-            <input type="hidden" name="id" id="id">
+            <input type="hidden" name="id" id="id" required>
+            <div class="form-group">
+              <label for="nisn">Foto</label>
+              <input type="file" class="form-control" name="foto">
+            </div>
             <div class="form-group">
               <label for="nisn">NISN</label>
-              <input type="number" class="form-control" id="nisn" name="nisn" required>
+              <input type="number" class="form-control" id="nisn" name="nisn" required readonly>
             </div>
             <div class="form-group">
               <label for="nama_siswa">Nama Siswa</label>

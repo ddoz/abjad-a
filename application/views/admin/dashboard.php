@@ -30,6 +30,7 @@
                                 </div>
                             </div>
                         </div>
+                        <?php if($this->session->userdata('level')=='admin'){ ?>
                         <div class="col-md-4 text-center">
                             <div class="card">
                                 <div class="card-header">Data Siswa</div>
@@ -38,8 +39,9 @@
                                 </div>
                             </div>
                         </div>
+                        <?php }?>
                     </div>
-
+                    <?php if($this->session->userdata('level')=='admin'){ ?>
                     <div class="row mt-4">
                         <div class="col-md-12">
                             <div class="card">
@@ -50,6 +52,7 @@
                             </div>
                         </div>
                     </div>
+                    <?php }?>
                 </div>
             </div>
         </div>

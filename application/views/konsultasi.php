@@ -11,7 +11,8 @@
 
         <div class="col-md-9">
             <div class="card">
-                <div class="card-header">Data Konsultasi
+                <div class="card-header">Data Konsultasi Saya
+                <button data-toggle="modal" data-target="#modalKonsultasi" class="btn btn-primary btn-sm float-right">Kirim Konsultasi</button>
                 </div>
                 <div class="card-body">
                     <?php 
@@ -26,11 +27,8 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Foto</th>
-                                    <th>Nama Siswa</th>
-                                    <th>Nama Kelas</th>
                                     <th>Keluhan</th>
-                                    <th>Jawaban Guru</th>
+                                    <th>Jawaban Guru BK</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -38,19 +36,13 @@
                                 <?php foreach($konsultasi as $i => $k){ ?>
                                 <tr>
                                     <td><?=$i+1?></td>
-                                    <td>
-                                    <img class="rounded-circle" src="data:<?php echo $k->tipe_berkas; ?>;base64,<?php echo $k->foto; ?>" width="100">
-                                    </td>
-                                    <td><?=$k->nama_siswa?></td>
-                                    <td><?=$k->nama_kelas?></td>
                                     <td><?=$k->keluhan?></td>
                                     <td><?=$k->jawaban?></td>
                                     <td>
-                                            <button onclick="
-                                                document.getElementById('id').value = <?=$k->id?>;
-                                            " type="button" data-toggle="modal" data-target="#modalKeluhan" class="btn btn-warning btn-sm">Jawab</button>
-                                            
-                                            <a onclick="return confirm('Hapus Data?')" href="<?=base_url('admin/konsultasi/destroy/')?><?=$k->id?>" type="button" class="btn btn-danger btn-sm">hapus</a>
+                                        
+                                            <?php if($k->jawaban==null){ ?>
+                                            <a onclick="return confirm('Hapus Data?')" href="<?=base_url('konsultasi/destroy/')?><?=$k->id?>" type="button" class="btn btn-danger btn-sm">hapus</a>
+                                            <?php }?>
                                         
                                     </td>
                                 </tr>
@@ -64,27 +56,26 @@
     </div>
 </div>
 
-  <!-- Modal -->
-<div class="modal fade" id="modalKeluhan" tabindex="-1" role="dialog" aria-labelledby="modalKeluhanLabel" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="modalKonsultasi" tabindex="-1" role="dialog" aria-labelledby="modalKonsultasiLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalKeluhanLabel">Form Jawab Keluhan</h5>
+          <h5 class="modal-title" id="modalKonsultasiLabel">Form Keluhan</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <form action="<?=base_url('admin/konsultasi/update')?>" method="POST">
-            <input type="hidden" name="id" id="id">
+          <form action="<?=base_url('konsultasi/store')?>" method="POST">
             <div class="form-group">
-              <label for="jawaban">Jawaban</label>
-              <textarea class="form-control" id="jawaban" rows="20" name="jawaban" required></textarea>
+              <label for="nama_kelas">Keluhan</label>
+              <textarea name="keluhan" id="" cols="30" rows="10" class="form-control" required></textarea>
             </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            <button type="submit" class="btn btn-primary">Kirim Jawaban</button>
+            <button type="submit" class="btn btn-primary">Kirim Keluhan</button>
         </form>
         </div>
       </div>

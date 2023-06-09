@@ -1,7 +1,10 @@
+
+<section class="top">
 <?php
+    $this->load->view('template/kop');
     $this->load->view('template/navbar');
 ?>
-
+</section>
 
 <div class="container-fluid" id="background-main">
     <div class="formLogin">       

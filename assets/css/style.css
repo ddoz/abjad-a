@@ -4,7 +4,7 @@ html,body {
 
 #background-main {
     background-image: url(../img/images.jpeg);
-    height: 400px;
+    height: 70vh;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

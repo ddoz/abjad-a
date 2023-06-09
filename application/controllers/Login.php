@@ -6,13 +6,14 @@ class Login extends CI_Controller {
 	public function __construct() {
 		parent::__construct(); 	
 		$this->load->library('form_validation');
-		if($this->session->userdata('username')!=null) {
-			redirect(base_url()."dashboard");
-		}
+		
 	 }
 
 	public function index()
 	{
+		if($this->session->userdata('username')!=null) {
+			redirect(base_url()."dashboard");
+		}
 		$content = array(
 			"body" => "login"
 		);
@@ -37,9 +38,11 @@ class Login extends CI_Controller {
 				if(password_verify($post['password'], $dataUser->password)) {
 					$this->session->set_userdata(
 						array(
+							"id" => $dataUser->id,
 							"username"=>$dataUser->username,
 							"nama" => $dataUser->nama,
-							"level" => $dataUser->level
+							"level" => $dataUser->level,
+							"user_related" => $dataUser->user_related,
 						)
 					);
 					redirect(base_url()."dashboard");
@@ -52,5 +55,10 @@ class Login extends CI_Controller {
 			redirect(base_url()."login");
 		   }
         }
+	}
+
+	public function logout() {
+		session_destroy();
+		redirect(base_url());
 	}
 }

@@ -7,7 +7,7 @@ class Dashboard extends CI_Controller {
 		parent::__construct(); 	
 		$this->load->library('form_validation');
 		if(!isLogin()) {
-			redirect(base_url()."dashboard");
+			redirect(base_url());
 		}
 	}
 
