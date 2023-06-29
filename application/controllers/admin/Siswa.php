@@ -116,15 +116,16 @@ class Siswa extends CI_Controller {
 
         if ($this->form_validation->run() == FALSE) {
             $content = array(
-				"body" => "admin/kelas",
-                "script" => 'script/admin_kelas',
-                'kelas' => $this->db->get('kelas')->result()
+				"body" => "admin/siswa",
+                "script" => 'script/admin_siswa',
+                'siswa' => $this->Siswa_model->getSiswa(),
+                'daftarKelas' => $this->Kelas_model->getKelas()
 			);
 			$this->load->view('template/theme', $content);
         } else {
             $siswa = $this->Siswa_model->getSiswaByNisnExceptId($nisn, $id);
             if ($siswa) {            
-                $this->session->set_flashdata('message','Kelas Gagal diubah. NISN sudah terdaftar.');                 
+                $this->session->set_flashdata('message','Siswa Gagal diubah. NISN sudah terdaftar.');                 
             } else {
                 // Data siswa
                 $data_siswa = array(

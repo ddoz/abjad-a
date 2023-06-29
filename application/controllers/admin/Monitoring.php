@@ -10,126 +10,78 @@ class Monitoring extends CI_Controller {
 			redirect(base_url()."dashboard");
 		}
         $this->load->model('Siswa_model');
-        $this->load->model('Kelas_model');
+        $this->load->model('Monitoring_model');
 	}
 
 	public function index()
 	{
-        
+        $this->db->select("monitoring.*,siswa.nama_siswa,kelas.nama_kelas");
+        $this->db->from('monitoring');
+        $this->db->join('siswa','siswa.id=monitoring.id_siswa');
+        $this->db->join('kelas','kelas.id=siswa.kelas_id');
+        $data = $this->db->get()->result();
 		$content = array(
 			"body" => "admin/monitoring",
             "script" => 'script/admin_siswa',
-            'siswa' => $this->Siswa_model->getSiswa(),
-            'daftarKelas' => $this->Kelas_model->getKelas()
+            'monitoring' => $data,
+            'siswa' => $this->Siswa_model->getSiswa()
 		);
 		$this->load->view('template/theme', $content);
 	}
 
     public function store() {
 
-        // Ambil data dari form
-        $nisn = $this->input->post('nisn');
-        $nama_siswa = $this->input->post('nama_siswa');
-        $kelas = $this->input->post('kelas_id');
-        $tanggal_lahir = $this->input->post('tanggal_lahir');
-
-        // Validasi form
-        $this->form_validation->set_rules('nisn', 'NISN', 'required');
-        $this->form_validation->set_rules('nama_siswa', 'Nama Siswa', 'required');
-        $this->form_validation->set_rules('kelas_id', 'Kelas', 'required');
-        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required');
+        // Menetapkan aturan validasi
+        $this->form_validation->set_rules('status', 'Pilih Jenis Monitoring', 'required');
+        $this->form_validation->set_rules('point', 'Point', 'required');
+        $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
+        $this->form_validation->set_rules('id_siswa', 'Siswa', 'required');
 
         if ($this->form_validation->run() == FALSE) {
             $content = array(
-				"body" => "admin/siswa",
+				"body" => "admin/monitoring",
                 "script" => 'script/admin_siswa',
-                'siswa' => $this->Siswa_model->getSiswa(),
-                'daftarKelas' => $this->Kelas_model->getKelas()
+                'siswa' => $this->Siswa_model->getSiswa()
 			);
 			$this->load->view('template/theme', $content);
         } else {
           
-    
-          // Cek kelas tersedia
-          $siswa = $this->Siswa_model->getSiswaByNisn($nisn);
-          if ($siswa) {
-            $this->session->set_flashdata('message','NISN Sudah Ada.');
-          } else {
-            // Data kelas valid, simpan ke database
-            // Data siswa
-            $data_siswa = array(
-                'nisn' => $nisn,
-                'nama_siswa' => $nama_siswa,
-                'kelas_id' => $kelas,
-                'tanggal_lahir' => $tanggal_lahir
+            // Jika validasi berhasil, simpan data ke database
+            $status = $this->input->post('status');
+            $point = $this->input->post('point');
+            $keterangan = $this->input->post('keterangan');
+            $id_siswa = $this->input->post('id_siswa');
+            $tanggal = $this->input->post('tanggal_pelanggaran');
+
+            $insert = array(
+                "point" => $point,
+                "keterangan" => $keterangan,
+                "id_siswa" => $id_siswa,
+                "tanggal_pelanggaran" => $tanggal,
             );
-            if ($this->Siswa_model->simpanSiswa($data_siswa)) {
-                $this->session->set_flashdata('message','Siswa Berhasil disimpan.');
-            } else {
-                $this->session->set_flashdata('message','Siswa Gagal disimpan.');
+
+            if($status == "Pelanggaran") {
+                $insert['pelanggaran'] = "1";
+            }else {
+                $insert['pelanggaran'] = "0";
+                $insert['prestasi'] = $status;
             }
-          }
-          redirect(base_url('admin/siswa'));
-        }
-    }
-
-    public function update() {
-        // Ambil data dari form
-        $id = $this->input->post('id');
-        $nisn = $this->input->post('nisn');
-        $nama_siswa = $this->input->post('nama_siswa');
-        $kelas = $this->input->post('kelas_id');
-        $tanggal_lahir = $this->input->post('tanggal_lahir');
-
-        // Validasi form
-        $this->form_validation->set_rules('id', 'ID', 'required');
-        $this->form_validation->set_rules('nisn', 'NISN', 'required');
-        $this->form_validation->set_rules('nama_siswa', 'Nama Siswa', 'required');
-        $this->form_validation->set_rules('kelas_id', 'Kelas', 'required');
-        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required');
-
-        if ($this->form_validation->run() == FALSE) {
-            $content = array(
-				"body" => "admin/kelas",
-                "script" => 'script/admin_kelas',
-                'kelas' => $this->db->get('kelas')->result()
-			);
-			$this->load->view('template/theme', $content);
-        } else {
-            $siswa = $this->Siswa_model->getSiswaByNisnExceptId($nisn, $id);
-            if ($siswa) {            
-                $this->session->set_flashdata('message','Kelas Gagal diubah. NISN sudah terdaftar.');                 
-            } else {
-                // Data siswa
-                $data_siswa = array(
-                    'nisn' => $nisn,
-                    'nama_siswa' => $nama_siswa,
-                    'kelas_id' => $kelas,
-                    'tanggal_lahir' => $tanggal_lahir
-                );
-                if ($this->Siswa_model->updateSiswa($id, $data_siswa)) {
-                    $this->session->set_flashdata('message','Siswa Berhasil diubah.');
-                } else {
-                    $this->session->set_flashdata('message','Siswa Gagal diubah.');
-                }
-            }
-            redirect(base_url('admin/siswa'));
+          
+            $this->Monitoring_model->saveData($insert);
+            $this->session->set_flashdata('message','Monitoring Berhasil disimpan.');
+           
+          redirect(base_url('admin/monitoring'));
         }
     }
 
     public function destroy($id) {
-        // Cek apakah ID siswa ada di tabel monitoring atau konsultasi
-        $isInMonitoring = $this->Siswa_model->isIdInMonitoring($id);
-        $isInKonsultasi = $this->Siswa_model->isIdInKonsultasi($id);
-        if ($isInMonitoring || $isInKonsultasi) {
-            $this->session->set_flashdata('message','Siswa Gagal dihapus. Karena terdapat siswa yang terhubung ke monitoring atau konsultasi.');
+        $this->db->where('id',$id);
+        if ($this->db->delete('monitoring')) {
+            $this->session->set_flashdata('message','Monitoring Berhasil dihapus.');
         } else {
-            if ($this->Siswa_model->hapusSiswa($id)) {
-                $this->session->set_flashdata('message','Siswa Berhasil dihapus.');
-            } else {
-                $this->session->set_flashdata('message','Siswa Gagal dihapus.');
-            }
+            $this->session->set_flashdata('message','Monitoring Gagal dihapus.');
         }
-        redirect(base_url('admin/siswa'));
+
+        redirect(base_url('admin/monitoring'));
     }
 }

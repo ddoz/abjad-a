@@ -1,18 +1,19 @@
 <div class="container mb-4">
-    <div class="d-flex flex-row justify-content-between">
-        <div class="d-flex flex-row align-items-center text-white gap-3">
-            <img src="<?=base_url()?>assets/img/logosmpalhuda.png" alt="" class="mr-2">
-            <h4>SMP AL HUDA<br>Jati Agung</h4>
+    <div class="row">
+        <div class="col-md-2 text-center">
+            <img width="100" src="<?=base_url()?>assets/img/logosmpalhuda.png" alt="">
         </div>
-        <div class="d-flex flex-column justify-content-center text-white">
-            <label for="">
+        <div class="col-md-6 align-items-center text-white text-center">
+            <h4 class="mt-4">SMP AL HUDA Jati Agung</h4>
+        </div>
+        <div class="col-md-4 align-items-center text-white">
+            <div class="pull-right mt-2">
                 <span class="fa fa-phone"></span>
                 0812345678
-            </label>
-            <label for="">
+                <br>
                 <span class="fa fa-envelope"></span>
                 smpalhuda@mail.com
-            </label>
+            </div>
         </div>
     </div>
 </div>

@@ -11,42 +11,37 @@
 
         <div class="col-md-9">
             <div class="card">
-                <div class="card-header">Data Konsultasi  <?php if($this->session->userdata('level')=='wali') echo 'Wali'; ?> Saya
-                <?php if($this->session->userdata('level')=='siswa'){ ?>
-                <button data-toggle="modal" data-target="#modalKonsultasi" class="btn btn-primary btn-sm float-right">Kirim Konsultasi</button>
-                <?php }?>
+                <div class="card-header">Data Monitoring <?php if($this->session->userdata('level')=='wali') echo 'Wali'; ?> Saya
                 </div>
                 <div class="card-body">
-                    <?php 
-                    if($this->session->flashdata('message')!="") { ?> <div class="alert alert-danger"><?=$this->session->flashdata('message'); ?> </div><?php } 
-                    if (validation_errors()) {
-                        echo '<div class="alert alert-danger">';
-                        echo validation_errors();
-                        echo '</div>';
-                    }?>
+                    
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                    <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Keluhan</th>
-                                    <th>Jawaban Guru BK</th>
-                                    <th></th>
+                                    <?php if($this->session->userdata('level')=='wali'){ ?>
+                                    <th>Nama Siswa</th>
+                                    <th>Nama Kelas</th>
+                                    <?php }?>
+                                    <th>Pelanggaran</th>
+                                    <th>Point</th>
+                                    <th>Prestasi</th>
+                                    <th>Tanggal</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($konsultasi as $i => $k){ ?>
+                                <?php foreach($monitoring as $i => $k){ ?>
                                 <tr>
                                     <td><?=$i+1?></td>
-                                    <td><?=$k->keluhan?></td>
-                                    <td><?=$k->jawaban?></td>
-                                    <td>
-                                        
-                                            <?php if($k->jawaban==null && $this->session->userdata('level')=='siswa'){ ?>
-                                            <a onclick="return confirm('Hapus Data?')" href="<?=base_url('konsultasi/destroy/')?><?=$k->id?>" type="button" class="btn btn-danger btn-sm">hapus</a>
-                                            <?php }?>
-                                        
-                                    </td>
+                                    <?php if($this->session->userdata('level')=='wali'){ ?>
+                                    <td><?=$k->nama_siswa?></td>
+                                    <td><?=$k->nama_kelas?></td>
+                                    <?php }?>
+                                    <td><?=($k->pelanggaran)?'Ya':'-';?></td>
+                                    <td><?=$k->point?></td>
+                                    <td><?=($k->prestasi=="Bukan Prestasi")?"-":$k->prestasi;?></td>
+                                    <td><?=$k->tanggal_pelanggaran?></td>
                                 </tr>
                                 <?php }?>
                             </tbody>

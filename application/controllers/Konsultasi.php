@@ -15,6 +15,33 @@ class Konsultasi extends CI_Controller {
 	{
         $this->db->where("id_siswa", $this->session->userdata('user_related'));
         $konsultasi = $this->db->get('konsultasi')->result();
+
+        if($this->session->userdata('level')=='wali'){
+            $this->db->where("id_wali", $this->session->userdata('user_related'));
+            $siswa = $this->db->get('wali_murid_detail')->result();
+            $arrSiswa = [];
+            foreach($siswa as $s) {
+                $arrSiswa[] = $s->id_siswa;
+            }
+            $this->db->select("konsultasi.*,kelas.nama_kelas,siswa.nama_siswa,siswa.tipe_berkas,siswa.foto");
+            $this->db->from('konsultasi');
+            $this->db->join("siswa","siswa.id=konsultasi.id_siswa");
+            $this->db->join("kelas","kelas.id=siswa.kelas_id");
+            $this->db->where_in('siswa.id',$arrSiswa);
+            $konsultasi = $this->db->get()->result();
+        }
+
+		$content = array(
+			"body" => "konsultasi",
+            "script" => 'script/admin_kelas',
+            'konsultasi' => $konsultasi
+		);
+		$this->load->view('template/theme', $content);
+	}
+
+    public function guru()
+	{
+        $konsultasi = $this->db->get('konsultasi')->result();
 		$content = array(
 			"body" => "konsultasi",
             "script" => 'script/admin_kelas',
