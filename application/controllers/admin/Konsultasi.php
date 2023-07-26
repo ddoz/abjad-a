@@ -6,6 +6,7 @@ class Konsultasi extends CI_Controller {
 	public function __construct() {
 		parent::__construct(); 	
 		$this->load->library('form_validation');
+        $this->load->model('Kelas_model');
 		if(!isLogin()) {
 			redirect(base_url()."dashboard");
 		}
@@ -13,16 +14,20 @@ class Konsultasi extends CI_Controller {
 
 	public function index()
 	{
-        
+        $kelas = $this->input->get('kelas');
         $this->db->select("konsultasi.*,kelas.nama_kelas,siswa.nama_siswa,siswa.tipe_berkas,siswa.foto");
         $this->db->from('konsultasi');
         $this->db->join("siswa","siswa.id=konsultasi.id_siswa");
         $this->db->join("kelas","kelas.id=siswa.kelas_id");
+        if($kelas != "") {
+            $this->db->where("siswa.kelas_id",$kelas);
+        }
         $konsultasi = $this->db->get()->result();
 		$content = array(
 			"body" => "admin/konsultasi",
             "script" => 'script/admin_siswa',
-            'konsultasi' => $konsultasi
+            'konsultasi' => $konsultasi,
+            'daftarKelas' => $this->Kelas_model->getKelas()
 		);
 		$this->load->view('template/theme', $content);
 	}

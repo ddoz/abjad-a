@@ -23,7 +23,7 @@
                         echo '</div>';
                     }?>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered exporting-table">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -40,7 +40,7 @@
                                 <?php foreach($guru as $i => $k){ ?>
                                 <tr>
                                     <td><?=$i+1?></td>
-                                    <td><img width="100" src="data:<?php echo $k->tipe_berkas; ?>;base64,<?php echo $k->foto; ?>"></td>
+                                    <td><img width="50" height="50" class="rounded-circle" src="data:<?php echo $k->tipe_berkas; ?>;base64,<?php echo $k->foto; ?>"></td>
                                     <td><?=$k->nip?></td>
                                     <td><?=$k->nama_guru?></td>
                                     <td><?=$k->pendidikan_terakhir?></td>

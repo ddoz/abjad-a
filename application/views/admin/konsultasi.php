@@ -21,8 +21,21 @@
                         echo validation_errors();
                         echo '</div>';
                     }?>
+                    <div class="row mb-2">
+                      <div class="col-md-4">
+                        <form action="" id="formFilter" method="get">
+                            <label for="">Filter Kelas</label>
+                          <select onchange="document.getElementById('formFilter').submit()" name="kelas" id="kelas" class="form-control">
+                            <option value="">Filter By Kelas</option>
+                            <?php foreach($daftarKelas as $k){ ?>
+                              <option <?php if($k->id == $this->input->get('kelas')) echo "selected"?> value="<?=$k->id?>"><?=$k->nama_kelas?></option>
+                            <?php }?>
+                          </select>
+                        </form>
+                      </div>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered exporting-table">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -39,7 +52,7 @@
                                 <tr>
                                     <td><?=$i+1?></td>
                                     <td>
-                                    <img class="rounded-circle" src="data:<?php echo $k->tipe_berkas; ?>;base64,<?php echo $k->foto; ?>" width="100">
+                                    <img width="50" height="50" class="rounded-circle" src="data:<?php echo $k->tipe_berkas; ?>;base64,<?php echo $k->foto; ?>" width="100">
                                     </td>
                                     <td><?=$k->nama_siswa?></td>
                                     <td><?=$k->nama_kelas?></td>

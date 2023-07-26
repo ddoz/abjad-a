@@ -23,7 +23,7 @@
                         echo '</div>';
                     }?>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered exporting-table">
                             <thead>
                                 <tr>
                                     <th>No</th>

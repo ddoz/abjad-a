@@ -8,6 +8,16 @@ class Siswa_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function getSiswaFilter($kelas = "") {
+        $this->db->select('siswa.*,kelas.nama_kelas');
+        $this->db->from('siswa');
+        $this->db->join("kelas",'kelas.id=siswa.kelas_id');
+        if($kelas != "") {
+            $this->db->where('siswa.kelas_id',$kelas);
+        }
+        return $this->db->get()->result();
+    }
+
     public function simpanSiswa($data) {
         return $this->db->insert('siswa', $data);
     }

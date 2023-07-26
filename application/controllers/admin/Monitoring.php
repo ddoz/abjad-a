@@ -11,20 +11,26 @@ class Monitoring extends CI_Controller {
 		}
         $this->load->model('Siswa_model');
         $this->load->model('Monitoring_model');
+        $this->load->model('Kelas_model');
 	}
 
 	public function index()
 	{
+        $kelas = $this->input->get('kelas');
         $this->db->select("monitoring.*,siswa.nama_siswa,kelas.nama_kelas");
         $this->db->from('monitoring');
         $this->db->join('siswa','siswa.id=monitoring.id_siswa');
         $this->db->join('kelas','kelas.id=siswa.kelas_id');
+        if($kelas != "") {
+            $this->db->where("siswa.kelas_id",$kelas);
+        }
         $data = $this->db->get()->result();
 		$content = array(
 			"body" => "admin/monitoring",
             "script" => 'script/admin_siswa',
             'monitoring' => $data,
-            'siswa' => $this->Siswa_model->getSiswa()
+            'siswa' => $this->Siswa_model->getSiswa(),
+            'daftarKelas' => $this->Kelas_model->getKelas()
 		);
 		$this->load->view('template/theme', $content);
 	}

@@ -15,11 +15,11 @@ class Siswa extends CI_Controller {
 
 	public function index()
 	{
-        
+        $kelas = $this->input->get('kelas');
 		$content = array(
 			"body" => "admin/siswa",
             "script" => 'script/admin_siswa',
-            'siswa' => $this->Siswa_model->getSiswa(),
+            'siswa' => $this->Siswa_model->getSiswaFilter($kelas),
             'daftarKelas' => $this->Kelas_model->getKelas()
 		);
 		$this->load->view('template/theme', $content);

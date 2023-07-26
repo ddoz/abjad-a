@@ -22,8 +22,21 @@
                         echo validation_errors();
                         echo '</div>';
                     }?>
+                    <div class="row mb-2">
+                      <div class="col-md-4">
+                        <form action="" id="formFilter" method="get">
+                        <label for="">Filter Kelas</label>
+                          <select onchange="document.getElementById('formFilter').submit()" name="kelas" id="kelas" class="form-control">
+                            <option value="">Filter By Kelas</option>
+                            <?php foreach($daftarKelas as $k){ ?>
+                              <option <?php if($k->id == $this->input->get('kelas')) echo "selected"?> value="<?=$k->id?>"><?=$k->nama_kelas?></option>
+                            <?php }?>
+                          </select>
+                        </form>
+                      </div>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered exporting-table">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -31,6 +44,7 @@
                                     <th>Nama Kelas</th>
                                     <th>Pelanggaran</th>
                                     <th>Point</th>
+                                    <th>Keterangan</th>
                                     <th>Prestasi</th>
                                     <th>Tanggal</th>
                                     <th></th>
@@ -46,6 +60,7 @@
                                     <td><?=$k->point?></td>
                                     <td><?=$k->prestasi?></td>
                                     <td><?=$k->tanggal_pelanggaran?></td>
+                                    <td><?=$k->keterangan?></td>
                                     <td>
                                         <a onclick="return confirm('Hapus Data?')" href="<?=base_url('admin/monitoring/destroy/')?><?=$k->id?>" type="button" class="btn btn-danger btn-sm">hapus</a>
                                     </td>

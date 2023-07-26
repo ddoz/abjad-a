@@ -12,7 +12,6 @@
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">Data User
-                <button data-toggle="modal" data-target="#modalKelas" class="btn btn-primary btn-sm float-right">Tambah Kelas</button>
                 </div>
                 <div class="card-body">
                     <?php 
@@ -23,7 +22,7 @@
                         echo '</div>';
                     }?>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered exporting-table">
                             <thead>
                                 <tr>
                                     <th>No</th>
